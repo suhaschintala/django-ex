@@ -102,7 +102,7 @@ class Command(BaseCommand):
 			pdata = data_map[player_id]
 			player= None
 			try :
-				player = Player.objects.using('com1').get(id=player_id)
+				player = Player.objects.get(id=player_id)
 				# self.stdout.write("" + str(player.id) + '  ' + str(player_id))
 				log_list.append(
 					Log(timestamp=time, off_score=pdata['offPoints'], deff_score=pdata['deffPoints'], hero_score=pdata['heroes'], population=pdata['population'], player_id=player.id, kingdom_id=int(pdata['kingdomId']))
@@ -111,13 +111,13 @@ class Command(BaseCommand):
 			except Player.DoesNotExist:
 				try :
 					player = Player(name=pdata['player_name'], id=player_id, capital=0, tribe=int(pdata['tribe']))
-					player.save(using='com1')
+					player.save()
 					log_list.append(
 						Log(timestamp=time, off_score=pdata['offPoints'], deff_score=pdata['deffPoints'], hero_score=pdata['heroes'], population=pdata['population'], player_id=player_id, kingdom_id=int(pdata['kingdomId']))
 					)
 				except KeyError:
 					pass
 		self.stdout.write("Yea!! " + str(len(log_list)))
-		Log.objects.using('com1').bulk_create(log_list)
+		Log.objects.bulk_create(log_list)
 		
 
