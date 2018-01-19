@@ -40,7 +40,7 @@ class Command(BaseCommand):
         session = raw_input('enter session')
         server = raw_input('enter server')
         kingdomId = raw_input('enter kingdm ID')
-        data = '{"controller":"ranking","action":"getRankAndCount","params":{"id":'+kingdomId+',"rankingType":"ranking_Kingdom","rankingSubtype":"victoryPoints"},"session":"'+session+'"}'
+        data = '{"controller":"ranking","action":"getRankAndCount","params":{"id":'+kingdomId+',"rankingType":"ranking_Kingdom","rankingSubtype":"population"},"session":"'+session+'"}'
         all_kingdoms = [k.id for k in Kingdom.objects.all()]
         r = requests.post('http://'+server+'.kingdoms.com/api/', headers=headers, params=params, cookies=cookies, data=data)
         json_data = json.loads(r.text)
