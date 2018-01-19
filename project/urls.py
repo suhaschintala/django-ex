@@ -3,7 +3,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 from welcome.views import index, health
-
+import welcome.views
 urlpatterns = [
     # Examples:
     # url(r'^$', 'project.views.home', name='home'),
@@ -12,6 +12,14 @@ urlpatterns = [
     url(r'^$', index),
     url(r'^health$', health),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^player/', welcome.views.playerpage, name='playerpage'),
+    url(r'^online/', welcome.views.onlinepage, name='onlinepage'),
+    url(r'^time/', welcome.views.timepage, name='timepage'),
+    url(r'^attacks/', welcome.views.attackpage, name='attackpage'),
+    url(r'^playerdata/', welcome.views.playerdata, name='playerdata'),
+    url(r'^timeintervaldata/', welcome.views.timeintervaldata, name='timeintervaldata'),
+    url(r'^onlinedata/', welcome.views.onlinedata, name='onlinedata'),
+    url(r'^attack_analyzer/', welcome.views.attack_analyzer, name='attack'),
 ]
 
 if settings.DEBUG:

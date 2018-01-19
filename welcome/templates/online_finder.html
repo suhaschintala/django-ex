@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+<script src="{% static 'js/online.js'%}"></script>
+<style type="text/css">
+	#hor-minimalist-a
+	{
+		font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+		font-size: 12px;
+		background: #fff;
+		margin: 45px;
+		width: auto;
+		border-collapse: collapse;
+		text-align: left;
+	}
+	#hor-minimalist-a th
+	{
+		font-size: 14px;
+		font-weight: normal;
+		color: #039;
+		padding: 10px 8px;
+		border-bottom: 2px solid #6678b1;
+	}
+	#hor-minimalist-a td
+	{
+		color: #669;
+		padding: 9px 8px 0px 8px;
+	}
+	#hor-minimalist-a tbody tr:hover td
+	{
+		color: #009;
+	}
+</style>
+{% verbatim %}
+<div ng-app="myApp">
+	<div  ng-controller="onlineCtrl">
+		<div>
+			<form class="form-horizontal" ng-submit="submitForm()" role="form">
+				<div class="form-group">
+		            <label for="server" class="col-sm-3 control-label">Server Name</label>
+		            <div class="col-sm-6">
+		                <input type="text" id="server" class="form-control" placeholder="Write here.." ng-model="server" />
+		                <p>like com1x3 , com2</p>
+		            </div>
+		            <div class="col-sm-3"></div>
+
+		        </div>
+		        <div class="form-group">
+		            <label for="playerName" class="col-sm-3 control-label">Player Name</label>
+		            <div class="col-sm-6">
+		                <input type="text" id="playerName" class="form-control" placeholder="Write here.." ng-model="playerName" />
+		                <p>please write exact names! (including caps and spaces)</p>
+		                <p>The data is in GMT+5:30 timezone, my timezone , it will be rectified soon</p>
+		            </div>
+		            <div class="col-sm-3"></div>
+
+		        </div>
+		        <div class="form-group">
+		            <label for="days" class="col-sm-3 control-label">Days</label>
+		            <div class="col-sm-6">
+		                <input type="number" id="days" class="form-control" placeholder="Write here.." ng-model="days" />
+		            </div>
+		            <div class="col-sm-3"></div>
+
+		        </div>
+		        <input type="submit" value="Submit" class="btn btn-primary col-sm-offset-3" />
+		    </form>
+		</div>
+		<div ng-show="onlineHistory">
+			<div class="col-sm-2"></div>
+			<table id="hor-minimalist-a" summary="Player Log Data" class="col-sm-8">
+				<thead>
+					<th>Time</th>
+					<th>Gain</th>
+					<th>Trend</th>
+				</thead>
+				<tbody>
+					<tr ng-repeat="log in logs track by $index">
+						<td>{{$index}}</td>
+						<td>{{log.sum}}</td>
+						<td>{{log.vals}}</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="col-sm-2"></div>
+		</div>
+	</div>
+</div>
+{% endverbatim %}
+{% endblock %}

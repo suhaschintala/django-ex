@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+<script src="{% static 'js/timeanalysis.js'%}"></script>
+<style type="text/css">
+	.hor-minimalist-a
+	{
+		font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+		font-size: 12px;
+		background: #fff;
+		margin: 0px;
+		width: 100%;
+		border-collapse: collapse;
+		text-align: left;
+	}
+	.hor-minimalist-a th
+	{
+		font-size: 14px;
+		font-weight: normal;
+		color: #039;
+		padding: 10px 8px;
+		border-bottom: 2px solid #6678b1;
+	}
+	.hor-minimalist-a td
+	{
+		color: #669;
+		padding: 9px 8px 0px 8px;
+	}
+	.hor-minimalist-a tbody tr:hover td
+	{
+		color: #009;
+	}
+</style>
+{% verbatim %}
+<div ng-app="myApp">
+	<div  ng-controller="timeCtrl">
+		<div>
+			<form class="form-horizontal" ng-submit="submitForm()" role="form">
+				<div class="form-group">
+		            <label for="server" class="col-sm-3 control-label">Server</label>
+		            <div class="col-sm-6">
+		                <input type="text" id="server" class="form-control" ng-model="server" placeholder="com1x3" />
+		            </div>
+		            <div class="col-sm-3"></div>
+
+		        </div>
+		        <div class="form-group">
+		            <label for="time" class="col-sm-3 control-label">time</label>
+		            <div class="col-sm-6">
+		                <input type="text" id="time" class="form-control" ng-model="time" placeholder="10:30" />
+		            </div>
+		            <div class="col-sm-3"></div>
+
+		        </div>
+		        <div class="form-group">
+		            <label for="date" class="col-sm-3 control-label">date</label>
+		            <div class="col-sm-6">
+		                <input type="text" id="date" class="form-control" ng-model="date" placeholder="2017-08-10"/>
+		            </div>
+		            <div class="col-sm-3"></div>
+
+		        </div>
+		        <div class="form-group">
+		            <label for="interval" class="col-sm-3 control-label">interval</label>
+		            <div class="col-sm-6">
+		                <input type="text" id="interval" class="form-control" ng-model="interval" placeholder="in minutes, like 30"/>
+		            </div>
+		            <div class="col-sm-3"></div>
+
+		        </div>
+		        <input type="submit" value="Go!" class="btn btn-primary col-sm-offset-3" />
+		    </form>
+		    <div>
+		    	Click on a player name to see the closest villas to that player whose deff points increased
+		    </div>
+		</div>
+		<div ng-show="reporter">
+			<div class="col-sm-3">
+				<table class="hor-minimalist-a" summary="Player Log Data">
+					<thead>
+						<th>Name</th>
+						<th>Deff Points</th>
+						<th>Coords</th>
+						<th>Kingdom</th>
+					</thead>
+					<tbody>
+						<tr ng-repeat="entry in deff_diff | orderBy:compareCaps">
+							<td>{{entry.playerName}}</td>
+							<td>{{entry.score}}</td>
+							<td>{{(entry.x) + "," + ( entry.y)}}</td>
+							
+							<td>{{entry.kingdom}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div ng-show="playerHistory">
+		<div class="col-sm-12">
+				<select name="singleSelect" id="singleSelect" ng-model="tribe">
+				<option value="">All</option>
+			      <option value="1">Roman</option> <!-- not selected / blank option -->
+			      <option value="2">Teuton</option> <!-- interpolation -->
+			      <option value="3">Gaul</option>
+			    </select>
+			</div>
+			<div class="col-sm-4">
+				<table class="hor-minimalist-a" summary="Player Log Data">
+					<thead>
+						<th>Name</th>
+						<th>Off Points</th>
+						<th>Coords</th>
+						<th>Kingdom</th>
+					</thead>
+					<tbody>
+						<tr ng-repeat="entry in off_diff | zeroFilter:true | tribeFilter:tribe | orderBy:'-score'">
+							<td><a href="#" ng-click="happening(entry)">{{entry.playerName}}</a></td>
+							<td>{{entry.score}}</td>
+							<td>{{(entry.x) + "," + ( entry.y)}}</td>
+							<td>{{entry.kingdom}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-sm-4">
+				<table class="hor-minimalist-a" summary="Player Log Data">
+					<thead>
+						<th>Name</th>
+						<th>Deff Points</th>
+						<th>Coords</th>
+						<th>Kingdom</th>
+					</thead>
+					<tbody>
+						<tr ng-repeat="entry in deff_diff | zeroFilter:true  | tribeFilter:tribe | orderBy:'-score'">
+							<td><a href="#" ng-click="happening(entry)">{{entry.playerName}}</a></td>
+							<td>{{entry.score}}</td>
+							<td>{{(entry.x) + "," + ( entry.y)}}</td>
+							<td>{{entry.kingdom}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-sm-4">
+				<table class="hor-minimalist-a" summary="Player Log Data">
+					<thead>
+						<th>Name</th>
+						<th>Hero Points</th>
+						<th>Coords</th>
+						<th>Kingdom</th>
+					</thead>
+					<tbody>
+						<tr ng-repeat="entry in hero_diff | zeroFilter:true  | tribeFilter:tribe | orderBy:'-score'">
+							<td>{{entry.playerName}}</td>
+							<td>{{entry.score}}</td>
+							<td>{{(entry.x) + "," + ( entry.y)}}</td>
+							<td>{{entry.kingdom}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+{% endverbatim %}
+{% endblock %}

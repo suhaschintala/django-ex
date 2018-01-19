@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<div class="jumbotron text-center">
+  <div class="container">
+    <a href="/" class="lang-logo">
+      <img src="{% static 'lang-logo.png'%}">
+    </a>
+    <h1>The Travian Pensieve</h1>
+    <p>Remember Pensieve in Harry Potter? The Memories stored in bottles can be relived again within the pensieve to Understand memories in a better way! In Travian Pensieve , We are going to relive the Major conflicts which happened during the server time of the game. How Do We Do it? We use the offense, defense hero points changes to see that.</p>
+    <a type="button" class="btn btn-lg btn-default" href="/player"><span class="glyphicon glyphicon-flash"></span>Player Records</a>
+    <a type="button" class="btn btn-lg btn-primary" href="/time"><span class="glyphicon glyphicon-download"></span>Time interval Analysis</a>
+  </div>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <h3><span class="glyphicon glyphicon-info-sign"></span> How Travian Pensieve works</h3>
+      <ul>
+        <li><b>We store offense , defense, hero point scores of everyone in the server once every 30 minutes</b></li>
+
+        <b><li>With these scores, One can track a player's progress as a deff or off player</li>
+        <li>Lets say you have a report of an attack at 10:35 am 10th August 2017 which was well defended but you have NO CLUE who participated in defense. Now, You can specify the time of attack to the website and Travian Pensieve will show you whose Deff scores increased along with hero points nearby 10th August 10:35 am rapidly to exactly show who defended the attack thereby showing you who you are up against.</li>
+        <li>Use it to find Multi accounts which provide static defense to violaters by above method and report them. They usually have very low off scores but high deff scores.</li>
+        <li>Scout Reports usually mean no Off score increase but huge deff score increase</li>
+        <li>A heatmap of the entire map with sudden increase at Deff and off points will definitely Provide the best analysis for the strategists.</li></b>
+      </ul>
+    </div>
+    <div class="col-md-6">
+      <h3><span class="glyphicon glyphicon-link"></span> Next Steps</h3>
+      <ul>
+        <li>Player Records will show all the logs of a player's points! You can when his scores have improved </li>
+        <li>If off points improved really fast at a time interval, You can check out that time interval in time interval analysis to find who he attacked! Most probably, you would find them in the top deff points gainers! (unless he defends with clubs xD )</li>
+        <ul>
+          <li>If deff points improved really fast at a time interval, You can check out that time interval in time interval analysis to find who attacked him! Most probably, you would find them in the top off points gainers!</li>
+          <li>in Time Interval analysis, you would specify the interval you want to check the points change, the website will show you the top gainers in off/deff/hero pints. Most probably, off point gainers attacked the deff point gainers! ( unless some players attacked/defend robber hideouts)</li>
+        </ul>
+      </ul>
+      <h3><span class="glyphicon glyphicon-link"></span> Helpful Links</h3>
+      <ul>
+        <li><a href="/player">Player Analysis</a></li>
+        <li><a href="/time">Time interval analysis</a></li>
+      </ul>
+    </div>
+  </div> <!-- row -->
+  <div>
+    <!-- Screeshots -->
+  </div>
+   <div class="alert alert-info text-center" role="alert">
+    If you love my website, please share your love to me by sending a message on skype by clicking <a href="skype:suhaschintala?chat"><span class="glyphicon glyphicon-book"></span>here<span class="glyphicon glyphicon-book"></span></a>
+  </div>
+</div>
+{% endblock %}

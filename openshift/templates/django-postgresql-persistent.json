@@ -463,7 +463,7 @@
       "displayName": "Git Repository URL",
       "required": true,
       "description": "The URL of the repository with your application source code.",
-      "value": "https://github.com/openshift/django-ex.git"
+      "value": "https://github.com/suhaschintala/django-ex.git"
     },
     {
       "name": "SOURCE_REPOSITORY_REF",
@@ -505,7 +505,7 @@
       "name": "DATABASE_NAME",
       "displayName": "Database Name",
       "required": true,
-      "value": "default"
+      "value": "com1"
     },
     {
       "name": "DATABASE_USER",
