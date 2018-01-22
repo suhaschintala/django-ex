@@ -1,6 +1,6 @@
 from django.core.management import BaseCommand
 from django.utils import timezone
-from hello.models import *
+from welcome.models import *
 from datetime import datetime
 import requests
 import json
