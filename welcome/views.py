@@ -7,7 +7,7 @@ from . import database
 from .models import PageView
 from django.http import JsonResponse
 import json
-from .models import Log, Player, Kingdom
+from .models import Log, Player, Kingdom, GameWorld
 from datetime import datetime, timedelta
 from django.utils import timezone
 from django.core import serializers
@@ -26,10 +26,6 @@ def index(request):
 def health(request):
     return HttpResponse(PageView.objects.count())
 
-# Create your views here.
-def index(request):
-    # return HttpResponse('Hello from Python!')
-    return render(request, 'index.html')
 
 def playerpage(request):
 	return render(request, 'player.html')
@@ -57,15 +53,22 @@ def playerdata(request):
 	worldName= request.GET.get('server', 'com1x3')
 	playerId = '129'
 	if playerName is not 'None':
-		playerId = str(Player.objects.filter(name=playerName)[0].id)
+		playerId = str(Player.objects.filter(name=playerName)[0].pid)
 	else :
 		playerId = request.GET.get('playerId','129')
+	world = None
+	try :
+		world = GameWorld.objects.get(name=worldName)
+	except :
+		raise Http404("Game world does not exist")
+
 	playerId = int(playerId)
-	print playerId
-	print worldName
-	def_kingdom  = Kingdom.objects.get(id=0)
+	print(playerId)
+	print(worldName)
+
+	def_kingdom  = Kingdom.objects.get(kid=0,world=world)
 	kname = ''
-	plogs = list(Log.objects.filter(player__id=playerId).select_related('player', 'kingdom'))
+	plogs = list(Log.objects.filter(player__pid=playerId, world=world).select_related('player', 'kingdom'))
 	final_logs = []
 	
 	for log in plogs :
@@ -79,7 +82,7 @@ def playerdata(request):
 			'deff_score'	: log.deff_score,
 			'hero_score'	: log.hero_score,
 			'capital'		: log.player.capital,
-			'timestamp'		: log.timestamp - timedelta(hours=4, minutes=30),
+			'timestamp'		: log.timestamp,
 			'tribe'			: log.player.tribe,
 			'pop'			: log.population,
 			'kingdom'		: kname
@@ -93,7 +96,7 @@ def kingdomeanalysis(request):
 	worldName= request.GET.get('server', 'com1x3')
 	kingdomName= request.GET.get('name', 'NONE')
 	days= int(request.GET.get('days', '7'))
-	# logs = Log.objects.using(worldName).filter(timestamp__gt=)
+	# logs = Log.objects.filter(timestamp__gt=)
 
 
 def timeintervaldata(request):
@@ -102,14 +105,19 @@ def timeintervaldata(request):
 	time = request.GET.get('time', '22:08')
 	interval = request.GET.get('interval', '30')
 	worldName= request.GET.get('server', 'com1x3')
+	world = None
+	try :
+		world = GameWorld.objects.get(name=worldName)
+	except :
+		raise Http404("Game world does not exist")
 	interval = int(interval)
 	year, month, day = [int(x) for x in date.split('-')]
 	hour, minute = [int(x) for x in time.split(':')]
-	prev_date = datetime(year,month,day,hour,minute) - timedelta(hours=1,minutes=interval)
-	next_date = datetime(year,month,day,hour,minute) + timedelta(hours=-1,minutes=interval)
-	def_kingdom  = Kingdom.objects.get(id=0)
+	prev_date = datetime(year,month,day,hour,minute) - timedelta(minutes=interval)
+	next_date = datetime(year,month,day,hour,minute) + timedelta(minutes=interval)
+	def_kingdom  = Kingdom.objects.get(kid=0,world=world)
 	kname = ''
-	logs = list(Log.objects.filter(timestamp__range=(prev_date, next_date)).select_related('player', 'kingdom'))
+	logs = list(Log.objects.filter(timestamp__range=(prev_date, next_date), world=world).select_related('player', 'kingdom'))
 	final_logs = []
 	for log in logs :
 		if not log.kingdom :
@@ -123,7 +131,7 @@ def timeintervaldata(request):
 			'hero_score'	: log.hero_score,
 			'capital'		: log.player.capital,
 			'timestamp'		: log.timestamp,
-			'player_id'		: log.player.id,
+			'player_id'		: log.player.pid,
 			'tribe'			: log.player.tribe,
 			'kingdom'		: kname
 		}
@@ -135,17 +143,25 @@ def timeintervaldata(request):
 def onlinedata(request):
 	playerName = request.GET.get('name','None')
 	worldName= request.GET.get('server', 'com1x3')
+	world = GameWorld.objects.get(world=worldName)
 	days= request.GET.get('days', '5')
 	playerId = '129'
 	if playerName is not 'None':
-		playerId = str(Player.objects.filter(name=playerName)[0].id)
+		playerId = str(Player.objects.filter(name=playerName,world=world)[0].pid)
 	else :
 		playerId = request.GET.get('playerId','129')
 	playerId = int(playerId)
+
+	world = None
+	try :
+		world = GameWorld.objects.get(name=worldName)
+	except :
+		raise Http404("Game world does not exist")
+
 	days = int(days)
 	from datetime import datetime, timedelta
 	recdate = datetime.now() - timedelta(days=days)
-	recent_logs = list(Log.objects.filter(player__id=playerId).filter(timestamp__gt=recdate).select_related('player'))
+	recent_logs = list(Log.objects.filter(player__pid=playerId, world=world).filter(timestamp__gt=recdate).select_related('player'))
 	datebucket = [[] for x in range(0,24)]
 	for i  in range(1, len(recent_logs)): 
 		log = recent_logs[i]
@@ -172,7 +188,6 @@ def attack_analyzer(request):
 	def time_sent(time_arrived, id1,id2,speed):
 		coord1 = getcoordstuple(id1)
 		coord2 = getcoordstuple(id2)
-		print coord1 , coord2
 		speed = input()
 		dist = ((coord2[0] - coord1[0])**2 + (coord2[1] - coord1[1])**2)**(0.5)
 		time = ((dist*1.0000) / (speed*1.000))
@@ -215,7 +230,6 @@ def attack_analyzer(request):
 
 	r = requests.post('http://'+server+'.kingdoms.com/api/', params=params, headers=headers, cookies=cookies, data=data)
 	import json
-	print r.text
 	data = json.loads(r.text)
 	final_data = []
 	if 'cache' in data :
@@ -270,4 +284,19 @@ def activity(request):
 		
 	return JsonResponse({})
 
+
+def update_world(request):
+	session = request.GET.get('session','None')
+	name= request.GET.get('name', 'com1x3')
+	world = GameWorld(name=name,session=session)
+	world.save()
+	return HttpResponse("<h1>Server details saved</h1>")
+
+def update_log(request):
+	server= request.GET.get('server', 'com1')
+	world = GameWorld.objects.get(name=server)
+	from welcome.management.commands.com1_command import Command
+	x = Command()
+	x.handle()
+	return HttpResponse("The stats are logged! :)")
 

@@ -37,11 +37,12 @@ class Command(BaseCommand):
             ('a', 'getRankAndCount'),
         )
 
-        session = raw_input('enter session')
-        server = raw_input('enter server')
-        kingdomId = raw_input('enter kingdm ID')
-        data = '{"controller":"ranking","action":"getRankAndCount","params":{"id":'+kingdomId+',"rankingType":"ranking_Kingdom","rankingSubtype":"population"},"session":"'+session+'"}'
-        all_kingdoms = [k.id for k in Kingdom.objects.all()]
+        session = input('enter session')
+        server = input('enter server')
+        kingdomId = input('enter kingdm ID')
+        world = GameWorld.objects.get(name=server)
+        data = '{"controller":"ranking","action":"getRankAndCount","params":{"id":'+kingdomId+',"rankingType":"ranking_Kingdom","rankingSubtype":"victoryPoints"},"session":"'+session+'"}'
+        all_kingdoms = [k.kid for k in Kingdom.objects.filter(world=world)]
         r = requests.post('http://'+server+'.kingdoms.com/api/', headers=headers, params=params, cookies=cookies, data=data)
         json_data = json.loads(r.text)
         num_kingdoms = 0
@@ -59,11 +60,7 @@ class Command(BaseCommand):
         rankingData = json_data['response']['results']
         for rank in rankingData :
             if rank['kingdomId'] not in all_kingdoms : 
-                kingdoms.append(Kingdom(id=rank['kingdomId'], name=rank['name']))
+                kingdoms.append(Kingdom(kid=rank['kingdomId'], name=rank['name'], world=world))
             else :
-                Kingdom.objects.filter(id=rank['kingdomId']).update(name=rank['name'])
+                Kingdom.objects.filter(kid=rank['kingdomId'], world=world).update(name=rank['name'])
         Kingdom.objects.bulk_create(kingdoms)
-        zerok = Kingdom.objects.filter(id=0)
-        if len(zerok) == 0 :
-            zerok = Kingdom(id=0, name='NOTHING')
-            zerok.save()

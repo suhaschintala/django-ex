@@ -11,14 +11,16 @@ class GameWorld(models.Model):
 	session = models.CharField(max_length=50, default="None")
 
 class Player(models.Model):
-	id = models.IntegerField(primary_key=True)
+	pid = models.IntegerField(default=0)
 	name = models.CharField(max_length=20)
 	capital = models.IntegerField()
 	tribe = models.IntegerField()
+	world = models.ForeignKey(GameWorld, default=None, null=True, on_delete=models.CASCADE)
 
 class Kingdom(models.Model):
-	id = models.IntegerField(primary_key=True)
+	kid = models.IntegerField(default=0)
 	name = models.CharField(max_length=50, default="None")
+	world = models.ForeignKey(GameWorld, default=None, null=True, on_delete=models.CASCADE)
 
 
 class Log(models.Model):
@@ -27,5 +29,7 @@ class Log(models.Model):
 	deff_score = models.IntegerField()
 	hero_score = models.IntegerField()
 	population = models.IntegerField(default=0)
-	player = models.ForeignKey(Player, default=None)
-	kingdom = models.ForeignKey(Kingdom, default=None, null=True)
+	player = models.ForeignKey(Player, default=None, on_delete=models.CASCADE)
+	kingdom = models.ForeignKey(Kingdom, default=None, null=True, on_delete=models.CASCADE)
+	world = models.ForeignKey(GameWorld, default=None, null=True, on_delete=models.CASCADE)
+

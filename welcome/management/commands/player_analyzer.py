@@ -62,11 +62,10 @@ class Command(BaseCommand):
             ('a', 'getRankAndCount'),
             ('t1502065740553', ''),
         )
-        session = raw_input('session :')
-        server = raw_input('server :')
-        playerId = raw_input('played ID: ')
-        data = '{"controller":"ranking","action":"getRankAndCount","params":{"id":'+playerId+',"rankingType":"ranking_Player","rankingSubtype":"population"},"session":"'+session+'"}'
-
+        session = "84a801f2c7bb363a8095"
+        server = "com1"
+        world = GameWorld.objects.get(name=server)
+        data = '{"controller":"ranking","action":"getRankAndCount","params":{"id":3522,"rankingType":"ranking_Player","rankingSubtype":"population"},"session":"'+session+'"}'
         r = requests.post('http://'+server+'.kingdoms.com/api/', headers=headers, params=params, cookies=cookies, data=data)
         self.stdout.write('olol')
         json_data = json.loads(r.text)
@@ -77,7 +76,7 @@ class Command(BaseCommand):
             import sys
             sys.exit(0)
         players = []
-        player_ids = [p.id for p in Player.objects.all()]
+        player_ids = [p.pid for p in Player.objects.filter(world=world)]
         data_map = {}
         pts_formats = ['population']
         start = 0
@@ -93,9 +92,9 @@ class Command(BaseCommand):
         for player_id in data_map :
             pdata = data_map[player_id]
             if player_id in player_ids :
-                Player.objects.filter(id=player_id).update(tribe=int(pdata['tribe']))
+                Player.objects.filter(pid=player_id,world=world).update(tribe=int(pdata['tribe']))
             else  :
-                player = Player(name=pdata['player_name'], id=player_id, capital=0, tribe=int(pdata['tribe']))
+                player = Player(name=pdata['player_name'], pid=player_id, capital=0, tribe=int(pdata['tribe']), world=world)
                 players.append(player)
         Player.objects.bulk_create(players)
 

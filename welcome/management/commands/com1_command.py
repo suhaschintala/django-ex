@@ -1,6 +1,6 @@
 from django.core.management import BaseCommand
 from django.utils import timezone
-from welcome.models import *
+from hello.models import *
 from datetime import datetime
 import requests
 import json
@@ -73,6 +73,7 @@ class Command(BaseCommand):
 		)
 		session = "84a801f2c7bb363a8095"
 		server = "com1"
+		world = GameWorld.objects.get(name=server)
 		data = '{"controller":"ranking","action":"getRankAndCount","params":{"id":3522,"rankingType":"ranking_Player","rankingSubtype":"population"},"session":"'+session+'"}'
 
 		r = requests.post('http://'+server+'.kingdoms.com/api/', headers=headers, params=params, cookies=cookies, data=data)
@@ -102,18 +103,25 @@ class Command(BaseCommand):
 			pdata = data_map[player_id]
 			player= None
 			try :
-				player = Player.objects.get(id=player_id)
-				# self.stdout.write("" + str(player.id) + '  ' + str(player_id))
-				log_list.append(
-					Log(timestamp=time, off_score=pdata['offPoints'], deff_score=pdata['deffPoints'], hero_score=pdata['heroes'], population=pdata['population'], player_id=player.id, kingdom_id=int(pdata['kingdomId']))
-				)
+				player = Player.objects.get(pid=player_id, world=world)
+				try :
+					kingdom = Kingdom.objects.get(kid=int(pdata['kingdomId']), world=world)	
+					# self.stdout.write("" + str(player.id) + '  ' + str(player_id))
+					log_list.append(
+						Log(timestamp=time, off_score=pdata['offPoints'], deff_score=pdata['deffPoints'], hero_score=pdata['heroes'], population=pdata['population'], player_id=player.id, kingdom_id=kingdom.id,world=world)
+					)
+				except Kingdom.DoesNotExist:
+					kingdom = Kingdom(name="Test Name", kid=int(pdata['kingdomId']), world=world)
+					log_list.append(
+						Log(timestamp=time, off_score=pdata['offPoints'], deff_score=pdata['deffPoints'], hero_score=pdata['heroes'], population=pdata['population'], player_id=player.id, kingdom_id=kingdom.id,world=world)
+					)
 
 			except Player.DoesNotExist:
 				try :
-					player = Player(name=pdata['player_name'], id=player_id, capital=0, tribe=int(pdata['tribe']))
+					player = Player(name=pdata['player_name'], pid=player_id, capital=0, tribe=int(pdata['tribe']),world=world)
 					player.save()
 					log_list.append(
-						Log(timestamp=time, off_score=pdata['offPoints'], deff_score=pdata['deffPoints'], hero_score=pdata['heroes'], population=pdata['population'], player_id=player_id, kingdom_id=int(pdata['kingdomId']))
+						Log(timestamp=time, off_score=pdata['offPoints'], deff_score=pdata['deffPoints'], hero_score=pdata['heroes'], population=pdata['population'], player_id=player_id,world=world)
 					)
 				except KeyError:
 					pass
