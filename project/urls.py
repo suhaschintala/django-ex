@@ -20,6 +20,8 @@ urlpatterns = [
     url(r'^timeintervaldata/', welcome.views.timeintervaldata, name='timeintervaldata'),
     url(r'^onlinedata/', welcome.views.onlinedata, name='onlinedata'),
     url(r'^attack_analyzer/', welcome.views.attack_analyzer, name='attack'),
+    url(r'^session/', welcome.views.update_world, name='session'),
+    url(r'^update/', welcome.views.update_log, name='logs'),
 ]
 
 if settings.DEBUG:
