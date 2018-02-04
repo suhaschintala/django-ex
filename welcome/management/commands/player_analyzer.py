@@ -62,9 +62,9 @@ class Command(BaseCommand):
             ('a', 'getRankAndCount'),
             ('t1502065740553', ''),
         )
-        session = "84a801f2c7bb363a8095"
-        server = "com1"
+        server = input('enter server')
         world = GameWorld.objects.get(name=server)
+        session  = world.session
         data = '{"controller":"ranking","action":"getRankAndCount","params":{"id":3522,"rankingType":"ranking_Player","rankingSubtype":"population"},"session":"'+session+'"}'
         r = requests.post('http://'+server+'.kingdoms.com/api/', headers=headers, params=params, cookies=cookies, data=data)
         self.stdout.write('olol')

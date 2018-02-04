@@ -288,15 +288,16 @@ def activity(request):
 def update_world(request):
 	session = request.GET.get('session','None')
 	name= request.GET.get('name', 'com1x3')
-	world = GameWorld(name=name,session=session)
+	world = GameWorld.objects.get(name=name)
+	world.session = session
 	world.save()
 	return HttpResponse("<h1>Server details saved</h1>")
 
 def update_log(request):
-	server= request.GET.get('server', 'com1')
+	server= request.GET.get('server', 'com2x3')
 	world = GameWorld.objects.get(name=server)
-	from welcome.management.commands.com1_command import Command
+	from welcome.management.commands.command import Command
 	x = Command()
-	x.handle()
+	x.handle(server=server)
 	return HttpResponse("The stats are logged! :)")
 

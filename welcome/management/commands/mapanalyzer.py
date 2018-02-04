@@ -40,9 +40,9 @@ class Command(BaseCommand):
 		    ('a', 'getByRegionIds'),
 		)
 
-		server = 'com1'
-		session = '84a801f2c7bb363a8095'
+        server = input('enter server')
 		world = GameWorld.objects.get(name=server)
+		session = world.session
 		import json
 		names ='['
 		for i in range(-15, 14):

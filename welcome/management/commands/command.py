@@ -38,7 +38,7 @@ class Command(BaseCommand):
 				except :
 					pass
 
-	def handle(self, *args, **options):
+	def handle(self, server, *args, **options):
 		
 		cookies = {
 			'gl5SessionKey': '%7B%22key%22%3A%221e145327d5c1080f45ff%22%2C%22id%22%3A%221458675%22%7D',
@@ -71,8 +71,6 @@ class Command(BaseCommand):
 		    ('a', 'getRankAndCount'),
 		    ('t1502065740553', ''),
 		)
-		session = "84a801f2c7bb363a8095"
-		server = "com1"
 		world = GameWorld.objects.get(name=server)
 		session = world.session
 		data = '{"controller":"ranking","action":"getRankAndCount","params":{"id":3522,"rankingType":"ranking_Player","rankingSubtype":"population"},"session":"'+session+'"}'
