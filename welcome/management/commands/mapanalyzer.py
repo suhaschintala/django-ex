@@ -39,8 +39,7 @@ class Command(BaseCommand):
 		    ('c', 'map'),
 		    ('a', 'getByRegionIds'),
 		)
-
-        server = input('enter server')
+		server = input('enter server')
 		world = GameWorld.objects.get(name=server)
 		session = world.session
 		import json
