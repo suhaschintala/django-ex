@@ -14,14 +14,8 @@ from django.core import serializers
 # Create your views here.
 
 def index(request):
-    hostname = os.getenv('HOSTNAME', 'unknown')
-    PageView.objects.create(hostname=hostname)
-
-    return render(request, 'welcome/index.html', {
-        'hostname': hostname,
-        'database': database.info(),
-        'count': PageView.objects.count()
-    })
+    # return HttpResponse('Hello from Python!')
+    return render(request, 'index.html')
 
 def health(request):
     return HttpResponse(PageView.objects.count())
