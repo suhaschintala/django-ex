@@ -1,1 +1,1 @@
-/home/suhas/.local/bin/oc rsh django-psql-persistent-7-97smc python manage.py command server=com2x3
+*/30 * * * * /home/suhas/.local/bin/oc rsh django-psql-persistent-8-rs2r5 python manage.py command server=com2x3

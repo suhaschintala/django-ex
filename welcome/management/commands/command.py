@@ -7,7 +7,7 @@ import json
 #The class must be named Command, and subclass BaseCommand
 class Command(BaseCommand):
 	def add_arguments(self, parser):
-        parser.add_argument('server', nargs='+', type=str)
+		parser.add_argument('server', nargs='+', type=str)
 
 	def addRankingData(self, data_map, start, end, pts, server , session, headers, cookies):
 		params = (
