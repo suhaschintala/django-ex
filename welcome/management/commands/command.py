@@ -6,6 +6,8 @@ import requests
 import json
 #The class must be named Command, and subclass BaseCommand
 class Command(BaseCommand):
+	def add_arguments(self, parser):
+        parser.add_argument('server', nargs='+', type=str)
 
 	def addRankingData(self, data_map, start, end, pts, server , session, headers, cookies):
 		params = (
@@ -38,8 +40,8 @@ class Command(BaseCommand):
 				except :
 					pass
 
-	def handle(self, server, *args, **options):
-		
+	def handle(self, *args, **options):
+		server = options['server']
 		cookies = {
 			'gl5SessionKey': '%7B%22key%22%3A%221e145327d5c1080f45ff%22%2C%22id%22%3A%221458675%22%7D',
 			'gl5PlayerId': '1458675',
