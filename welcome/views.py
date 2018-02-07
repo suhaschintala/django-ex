@@ -292,6 +292,6 @@ def update_log(request):
 	world = GameWorld.objects.get(name=server)
 	from welcome.management.commands.command import Command
 	x = Command()
-	x.handle(server=server)
+	x.handle(server=server, url=True)
 	return HttpResponse("The stats are logged! :)")
 

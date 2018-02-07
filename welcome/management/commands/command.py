@@ -40,8 +40,12 @@ class Command(BaseCommand):
 				except :
 					pass
 
-	def handle(self, *args, **options):
-		server = options['server'][1]
+	def handle(self, **options):
+		server = ''
+		if 'url' in options:
+			server = options['server']
+		else :
+			server = options['server'][1]
 		cookies = {
 			'gl5SessionKey': '%7B%22key%22%3A%221e145327d5c1080f45ff%22%2C%22id%22%3A%221458675%22%7D',
 			'gl5PlayerId': '1458675',

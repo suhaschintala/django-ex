@@ -1,1 +1,3 @@
-*/30 * * * * /home/suhas/.local/bin/oc rsh django-psql-persistent-8-rs2r5 python manage.py command server=com2x3
+*/30 * * * * ~/git/django-ex/script.sh
+*/30 * * * * cd ~/git/travian-pensieve; /usr/bin/python ~/git/travian-pensieve/manage.py com2x3_command
+ 
